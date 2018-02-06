@@ -48,7 +48,7 @@ public class DocsGenerator {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        features = new Reflections("").getTypesAnnotatedWith(FeatureInfo.class);
+        features = new Reflections("com.voxelgameslib").getTypesAnnotatedWith(FeatureInfo.class);
         System.out.println("Found " + features.size() + " features");
     }
 
@@ -62,18 +62,21 @@ public class DocsGenerator {
             return;
         }
         try (PrintWriter pw = new PrintWriter(file)) {
-            lines.forEach(line -> {
+            for (String line : lines) {
                 System.out.println(line);
                 if (line.contains("[features]")) {
                     writeFeatures(pw);
+                    break;
                 } else if (line.contains("[phases]")) {
                     writePhases(pw);
+                    break;
                 } else if (line.contains("[games]")) {
                     writePhases(pw);
+                    break;
                 } else {
                     pw.println(line);
                 }
-            });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -116,11 +119,11 @@ public class DocsGenerator {
             pw.println("Author: " + featureInfo.author() + "  ");
             pw.println("Description: " + featureInfo.description() + "  ");
             pw.println("#### Params  ");
-            params.forEach(param -> pw.println(param + " "));
+            params.forEach(param -> pw.println(param + "  "));
             pw.println("#### Dependencies  ");
-            dependencies.forEach(dependency -> pw.println(dependency + " "));
+            dependencies.forEach(dependency -> pw.println(dependency + "  "));
             pw.println("#### Soft Dependencies  ");
-            softDependencies.forEach(dependency -> pw.println(dependency + " "));
+            softDependencies.forEach(dependency -> pw.println(dependency + "  "));
             pw.println("  ");
         });
     }
