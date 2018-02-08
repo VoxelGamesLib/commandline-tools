@@ -26,19 +26,24 @@ import com.voxelgameslib.voxelgameslib.phase.Phase;
 public class DocsGenerator {
 
     private Git git;
-    private File outDir = new File("docs");
+    private File outDir;
     private Set<Class<?>> features = new HashSet<>();
     private Set<Class<? extends Phase>> phases = new HashSet<>();
 
+    public DocsGenerator(File outDir) {
+        this.outDir = outDir;
+    }
+
     public void generate() {
-        System.out.println("cloneing wiki...");
+        System.out.println("cloning wiki into " + outDir.getAbsolutePath() + "...");
         cloneWiki();
         System.out.println("collect features...");
         collectFeatures();
         System.out.println("modify features.md...");
         modify(new File(outDir, "/docs/components/features.md"));
         System.out.println("commit wiki...");
-       // commitWiki();
+        commitWiki();
+        System.out.println("MAKE SURE YOU PUSH THE CHANGES!");
     }
 
     private void collectFeatures() {
@@ -64,6 +69,7 @@ public class DocsGenerator {
         try (PrintWriter pw = new PrintWriter(file)) {
             for (String line : lines) {
                 System.out.println(line);
+                pw.println(line);
                 if (line.contains("[features]")) {
                     writeFeatures(pw);
                     break;
@@ -73,8 +79,6 @@ public class DocsGenerator {
                 } else if (line.contains("[games]")) {
                     writePhases(pw);
                     break;
-                } else {
-                    pw.println(line);
                 }
             }
         } catch (Exception e) {
@@ -154,6 +158,7 @@ public class DocsGenerator {
 
     private void commitWiki() {
         try {
+            git.add().addFilepattern(".").call();
             git.commit().setMessage("Bot Update " + new Date().toString()).setAuthor("VoxelGamesLibBot", "vglbot@minidigger.me").call();
             // git.push().sert TODO PUSH
         } catch (GitAPIException e) {
