@@ -15,7 +15,7 @@ mainClassName = 'com.voxelgameslib.commandlinetools.CommandLineTools'
 repositories {
     mavenLocal()
     mavenCentral()
-    maven { url "https://nexus.indices.io/content/groups/public/" }
+    maven { url "https://voxelgameslib.github.io/VoxelGamesLibv2/mvn-repo" }
     maven { url "https://hub.spigotmc.org/nexus/content/groups/public/" }
     maven { url "https://oss.sonatype.org/content/groups/public/" }
     maven { url "https://ci.emc.gs/nexus/content/groups/aikar/" }
