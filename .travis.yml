@@ -25,5 +25,5 @@ deploy:
   on:
     branch: master
   skip_cleanup: true
-install: "gradle assemble"
-script: "gradle build dependencyUpdates"
+install: "gradle -version"
+script: "gradle build"
