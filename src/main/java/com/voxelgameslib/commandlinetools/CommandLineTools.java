@@ -16,7 +16,7 @@ public class CommandLineTools {
         options.addOption(new Option("generateDocs", "Regenerates the docs repo with the latest data"));
         options.addOption(Option.builder("docsFolder").desc("Specifies the folder where the docs should be cloned into (defaults to docs)").numberOfArgs(1).type(File.class).build());
 
-        options.addOption(new Option("generateTestServer", "Generates a testserver, read to run VGL"));
+        options.addOption(new Option("generateTestServer", "Generates a testserver, ready to run VGL"));
         options.addOption(Option.builder("serverFolder").desc("Specifies the folder where the testserver should be cloned into (defaults to testserver)").numberOfArgs(1).type(File.class).build());
         options.addOption(new Option("downloadJar", "Downloads paper from the ci"));
         options.addOption(new Option("jarFileName", "File name of the server jar"));
