@@ -23,6 +23,11 @@ public class CommandLineTools {
 
         options.addOption(new Option("generateSkeletonGamemode", "Generates a empty gamemode project"));
 
+        options.addOption(new Option("generateWorkspace", "Generates a workspace, ready to start working on VGL itself"));
+        options.addOption(Option.builder("workspaceFolder").desc("The folder where the workspace should be located in (defaults to VoxelGamesLib)").numberOfArgs(1).type(File.class).build());
+        options.addOption(new Option("includeAddons", "Also setup all default addons"));
+        options.addOption(new Option("includeOtherProjects", "Also setup other misc projects"));
+
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
         try {
@@ -32,19 +37,26 @@ public class CommandLineTools {
             return;
         }
 
-        if (cmd.hasOption("generateDocs")) {
-            File docsFolder = new File("docs");
-            if (cmd.hasOption("docsFolder")) {
+        boolean hasRun = false;
+        if (cmd.hasOption("generateWorkspace")) {
+            hasRun = true;
+            File workspaceFolder = new File("testserver");
+            if (cmd.hasOption("workspaceFolder")) {
                 try {
-                    docsFolder = (File) cmd.getParsedOptionValue("docsFolder");
+                    workspaceFolder = (File) cmd.getParsedOptionValue("workspaceFolder");
                 } catch (ParseException e) {
-                    System.err.println("Could not parse " + cmd.getOptionValue("docsFolder") + " into an file!");
+                    System.err.println("Could not parse " + cmd.getOptionValue("workspaceFolder") + " into an file!");
                     e.printStackTrace();
                     return;
                 }
             }
-            new DocsGenerator(docsFolder).generate();
-        } else if (cmd.hasOption("generateTestServer")) {
+
+            boolean shouldIncludeAddons = cmd.hasOption("includeAddons");
+            boolean shouldIncludeOtherProjects = cmd.hasOption("includeOtherProjects");
+            new WorkspaceGenerator().generate(workspaceFolder, shouldIncludeAddons, shouldIncludeOtherProjects);
+        }
+        if (cmd.hasOption("generateTestServer")) {
+            hasRun = true;
             File serverFolder = new File("testserver");
             if (cmd.hasOption("serverFolder")) {
                 try {
@@ -59,16 +71,34 @@ public class CommandLineTools {
             String jarFileName = cmd.getOptionValue("jarFileName", "paperclip.jar");
 
             new TestServerGenerator().generate(serverFolder, shouldDownloadJar, jarFileName);
-        } else if (cmd.hasOption("generateSkeletonGamemode")) {
+        }
+
+        if (!hasRun && cmd.hasOption("generateSkeletonGamemode")) {
+            hasRun = true;
             System.out.println("gen skeleton");
-        } else {
+        } else if (!hasRun && cmd.hasOption("generateDocs")) {
+            hasRun = true;
+            File docsFolder = new File("docs");
+            if (cmd.hasOption("docsFolder")) {
+                try {
+                    docsFolder = (File) cmd.getParsedOptionValue("docsFolder");
+                } catch (ParseException e) {
+                    System.err.println("Could not parse " + cmd.getOptionValue("docsFolder") + " into an file!");
+                    e.printStackTrace();
+                    return;
+                }
+            }
+            new DocsGenerator(docsFolder).generate();
+        }
+
+        if (!hasRun) {
             printHelp(options);
         }
     }
 
     private static void printHelp(Options options) {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("VoxelGamesLib CLI", "Possible options:", options,
+        formatter.printHelp("java -jar commandline-tools.jar", "Possible options:", options,
                 "Please report any issues to https://github.com/VoxelGamesLib/VoxelGamesLibv2/issues", true);
     }
 }
