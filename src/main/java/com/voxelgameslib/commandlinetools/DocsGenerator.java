@@ -141,18 +141,15 @@ public class DocsGenerator {
     }
 
     private void cloneWiki() {
-        if (outDir.exists()) {
-            try {
+        try {
+            if (outDir.exists()) {
                 git = Git.open(outDir);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
+                git.pull().call();
+            } else {
                 git = Git.cloneRepository().setURI("https://github.com/VoxelGamesLib/docs.git").setDirectory(outDir).setProgressMonitor(new TextProgressMonitor(new PrintWriter(System.out))).call();
-            } catch (GitAPIException e) {
-                e.printStackTrace();
             }
+        } catch (IOException | GitAPIException e) {
+            e.printStackTrace();
         }
     }
 

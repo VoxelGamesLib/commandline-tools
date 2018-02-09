@@ -58,7 +58,7 @@ public class CommandLineTools {
             boolean shouldDownloadJar = cmd.hasOption("downloadJar");
             String jarFileName = cmd.getOptionValue("jarFileName", "paperclip.jar");
 
-            new SetupHelper().setupTestServer(serverFolder, shouldDownloadJar, jarFileName);
+            new TestServerGenerator().generate(serverFolder, shouldDownloadJar, jarFileName);
         } else if (cmd.hasOption("generateSkeletonGamemode")) {
             System.out.println("gen skeleton");
         } else {

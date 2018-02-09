@@ -37,6 +37,7 @@ dependencies {
     compile group: 'com.voxelgameslib', name: 'voxelgameslib', version: '2.0-SNAPSHOT'
     compile group: 'org.spigotmc', name: 'spigot-api', version: '1.12.1-R0.1-SNAPSHOT'
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
 }
 
 jar {
