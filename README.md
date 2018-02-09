@@ -1,6 +1,10 @@
 # commandline-tools
 Small tools to automate stuff and things
 
+# Download
+
+You can download the latest version [here](https://github.com/VoxelGamesLib/commandline-tools/raw/gh-pages/commandline-tools-1.0-SNAPSHOT-all.jar)
+
 # Usage
 
 ```
