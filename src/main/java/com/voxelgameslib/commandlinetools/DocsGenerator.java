@@ -5,7 +5,6 @@ import com.google.gson.annotations.Expose;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.TextProgressMonitor;
-import org.reflections.Reflections;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +15,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.voxelgameslib.voxelgameslib.VoxelGamesLib;
 import com.voxelgameslib.voxelgameslib.feature.FeatureInfo;
 import com.voxelgameslib.voxelgameslib.feature.features.AutoRespawnFeature;
 import com.voxelgameslib.voxelgameslib.phase.Phase;
+
+import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 
 public class DocsGenerator {
 
@@ -53,7 +56,14 @@ public class DocsGenerator {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        features = new Reflections("com.voxelgameslib").getTypesAnnotatedWith(FeatureInfo.class);
+        features = new FastClasspathScanner().scan().getNamesOfClassesWithAnnotation(FeatureInfo.class).parallelStream().map(name -> {
+            try {
+                return Class.forName(name);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }).filter(Objects::nonNull).collect(Collectors.toSet());
         System.out.println("Found " + features.size() + " features");
     }
 
