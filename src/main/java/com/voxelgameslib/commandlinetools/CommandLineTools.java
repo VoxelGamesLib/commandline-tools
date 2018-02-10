@@ -22,6 +22,11 @@ public class CommandLineTools {
         options.addOption(new Option("jarFileName", "File name of the server jar"));
 
         options.addOption(new Option("generateSkeletonGamemode", "Generates a empty gamemode project"));
+        options.addOption(Option.builder("groupId").desc("The groupid of your gamemode").numberOfArgs(1).type(String.class).build());
+        options.addOption(Option.builder("projectName").desc("The name of your gamemode").numberOfArgs(1).type(String.class).build());
+        options.addOption(Option.builder("author").desc("Your name").numberOfArgs(1).type(String.class).build());
+        options.addOption(Option.builder("projectFolder").desc("The folder the project should be located in").numberOfArgs(1).type(File.class).build());
+        options.addOption(new Option("useKotlin", "If the gamemode should be written in kotlin"));
 
         options.addOption(new Option("generateWorkspace", "Generates a workspace, ready to start working on VGL itself"));
         options.addOption(Option.builder("workspaceFolder").desc("The folder where the workspace should be located in (defaults to VoxelGamesLib)").numberOfArgs(1).type(File.class).build());
@@ -82,7 +87,53 @@ public class CommandLineTools {
 
         if (!hasRun && cmd.hasOption("generateSkeletonGamemode")) {
             hasRun = true;
-            System.out.println("gen skeleton");
+            File projectFolder;
+            if (cmd.hasOption("projectFolder")) {
+                try {
+                    projectFolder = (File) cmd.getParsedOptionValue("projectFolder");
+                } catch (ParseException e) {
+                    System.err.println("Could not parse " + cmd.getOptionValue("projectFolder") + " into an file!");
+                    e.printStackTrace();
+                    return;
+                }
+            } else {
+                System.err.println("No project folder specified!");
+                System.out.println();
+                System.out.println();
+                printHelp(options);
+                return;
+            }
+
+            if (!cmd.hasOption("projectName")) {
+                System.err.println("No project name specified!");
+                System.out.println();
+                System.out.println();
+                printHelp(options);
+                return;
+            }
+
+            if (!cmd.hasOption("groupId")) {
+                System.err.println("No groupId specified!");
+                System.out.println();
+                System.out.println();
+                printHelp(options);
+                return;
+            }
+
+            if (!cmd.hasOption("author")) {
+                System.err.println("No author specified!");
+                System.out.println();
+                System.out.println();
+                printHelp(options);
+                return;
+            }
+
+            String projectName = cmd.getOptionValue("projectName");
+            String groupId = cmd.getOptionValue("groupId");
+            boolean useKotlin = cmd.hasOption("useKotlin");
+            String author = cmd.getOptionValue("author");
+
+            new SkeletonGenerator().generate(projectFolder, projectName, groupId, author, useKotlin);
         } else if (!hasRun && cmd.hasOption("generateDocs")) {
             hasRun = true;
             File docsFolder = new File("docs");

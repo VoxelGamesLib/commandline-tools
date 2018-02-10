@@ -5,6 +5,8 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.TextProgressMonitor;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 public class WorkspaceGenerator {
@@ -30,6 +32,28 @@ public class WorkspaceGenerator {
         }
         System.out.println("Done!");
 
+        System.out.println("Writing settings.gradle...");
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter(new File(workspaceFolder, "settings.gradle")));
+            writer.println("include 'VoxelGamesLib'");
+            if (shouldIncludeAddons) {
+                writer.println("include '1vs1'");
+                writer.println("include 'Hub'");
+                writer.println("include 'Deathmatch'");
+            }
+            if (shouldIncludeAddons) {
+                writer.println("include 'assets'");
+                writer.println("include 'commandline-tools'");
+                writer.println("include 'translation'");
+                writer.println("include 'KVGL'");
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Done");
+
+        System.out.println("You may now open " + workspaceFolder.getAbsolutePath() + " in intellij");
         // TODO promt to open idea, then close, then generate run configs in workspace.xml
         //TODO create run configs
     }
