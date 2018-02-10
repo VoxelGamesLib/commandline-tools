@@ -30,6 +30,7 @@ public class WorkspaceGenerator {
         }
         System.out.println("Done!");
 
+        // TODO promt to open idea, then close, then generate run configs in workspace.xml
         //TODO create run configs
     }
 

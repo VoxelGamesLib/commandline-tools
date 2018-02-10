@@ -28,12 +28,19 @@ public class CommandLineTools {
         options.addOption(new Option("includeAddons", "Also setup all default addons"));
         options.addOption(new Option("includeOtherProjects", "Also setup other misc projects"));
 
+        options.addOption(new Option("test", "Test stuff, pls ignore"));
+
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd;
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
             printHelp(options);
+            return;
+        }
+
+        if (cmd.hasOption("test")) {
+            new TestStuff();
             return;
         }
 
