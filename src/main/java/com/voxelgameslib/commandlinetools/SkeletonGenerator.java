@@ -1,6 +1,5 @@
 package com.voxelgameslib.commandlinetools;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.TextProgressMonitor;
@@ -39,18 +38,24 @@ public class SkeletonGenerator {
         String packageString = groupId + "." + projectName.toLowerCase();
         String classPrefix;
         String packageName;
+        String packagePathOld;
+        String newPackagePath;
         if (useKotlin) {
             classPrefix = "SkeletonKT";
             packageName = "me.minidigger.voxelgameslib.skeletonkt";
+            packagePathOld = "src/main/kotlin/me/minidigger/voxelgameslib/skeletonkt/";
+            newPackagePath = "src/main/kotlin/" + packageString.replace(".", "/");
         } else {
             classPrefix = "Skeleton";
             packageName = "me.minidigger.voxelgameslib.skeleton";
+            packagePathOld = "src/main/java/me/minidigger/voxelgameslib/skeleton/";
+            newPackagePath = "src/main/java/" + packageString.replace(".", "/");
         }
         File gitFolder = new File(folder, ".git");
-        File packageFolder = new File(folder, "src/main/java/" + packageString.replace(".", "/"));
+        File packageFolder = new File(folder, newPackagePath);
         File packageFolderParent = packageFolder.getParentFile();
         packageFolderParent.mkdirs();
-        File oldPackageFolder = new File(folder, "src/main/java/me/minidigger/voxelgameslib/skeleton/");
+        File oldPackageFolder = new File(folder, packagePathOld);
         System.out.println("Trying to rename: ");
         System.out.println(oldPackageFolder.getAbsolutePath() + "(" + oldPackageFolder.exists() + ")");
         System.out.println(packageFolder.getAbsolutePath() + "(" + packageFolder.exists() + ")");
@@ -69,14 +74,16 @@ public class SkeletonGenerator {
         System.out.println("Done");
 
         System.out.println("Renaming files");
-        String[] names = new String[]{"Feature.java", "Game.java", "Phase.java", "Plugin.java"};
+        String[] names = new String[]{"Feature", "Game", "Phase", "Plugin"};
+        String extention = useKotlin ? ".kt" : ".java";
         for (String name : names) {
+            name += extention;
             File oldFile = new File(packageFolder, classPrefix + name);
             File newFile = new File(packageFolder, projectName + name);
             if (oldFile.renameTo(newFile)) {
-                System.out.println("renamed Skeleton" + name + " to " + projectName + name);
+                System.out.println("renamed " + classPrefix + name + " to " + projectName + name);
             } else {
-                System.err.println("Didn't rename Skeleton" + name + " to " + projectName + name);
+                System.err.println("Didn't rename " + classPrefix + name + " to " + projectName + name);
                 return;
             }
         }
@@ -96,7 +103,7 @@ public class SkeletonGenerator {
         }});
         i += replace(new File(folder, "build.gradle"), new HashMap<String, String>() {{
             put(packageName, groupId);
-            put("Skeleton-1.0-SNAPSHOT.jar", projectName + "-1.0-SNAPSHOT.jar");
+            put(classPrefix + "-1.0-SNAPSHOT.jar", projectName + "-1.0-SNAPSHOT.jar");
         }});
         i += replace(new File(folder, "settings.gradle"), new HashMap<String, String>() {{
             put(classPrefix, projectName);
@@ -104,28 +111,28 @@ public class SkeletonGenerator {
         i += replace(new File(folder, "src/main/resources/plugin.yml"), new HashMap<String, String>() {{
             put(classPrefix, projectName);
             put("MiniDigger", author);
-            put(packageName + ".SkeletonPlugin", groupId + "." + projectName.toLowerCase() + "." + projectName + "Plugin");
+            put(packageName + "." + classPrefix + "Plugin", groupId + "." + projectName.toLowerCase() + "." + projectName + "Plugin");
         }});
-        i += replace(new File(packageFolder, projectName + "Plugin.java"), new HashMap<String, String>() {{
+        i += replace(new File(packageFolder, projectName + "Plugin" + extention), new HashMap<String, String>() {{
             put(classPrefix, projectName);
             put("MiniDigger", author);
-            put("package " + packageName + ";", "package " + packageString + ";");
+            put("package " + packageName, "package " + packageString);
         }});
-        i += replace(new File(packageFolder, projectName + "Phase.java"), new HashMap<String, String>() {{
-            put("SkeletonPhase", projectName + "Phase");
-            put("SkeletonFeature", projectName + "Feature");
+        i += replace(new File(packageFolder, projectName + "Phase" + extention), new HashMap<String, String>() {{
+            put(classPrefix + "Phase", projectName + "Phase");
+            put(classPrefix + "Feature", projectName + "Feature");
             put("oneVsOneFeature", projectName.toLowerCase() + "Feature");
-            put("package " + packageName + ";", "package " + packageString + ";");
+            put("package " + packageName, "package " + packageString);
         }});
-        i += replace(new File(packageFolder, projectName + "Game.java"), new HashMap<String, String>() {{
+        i += replace(new File(packageFolder, projectName + "Game" + extention), new HashMap<String, String>() {{
             put(classPrefix, projectName);
             put("MiniDigger", author);
-            put("package " + packageName + ";", "package " + packageString + ";");
+            put("package " + packageName, "package " + packageString);
         }});
-        i += replace(new File(packageFolder, projectName + "Feature.java"), new HashMap<String, String>() {{
+        i += replace(new File(packageFolder, projectName + "Feature" + extention), new HashMap<String, String>() {{
             put(classPrefix, projectName);
             put("MiniDigger", author);
-            put("package " + packageName + ";", "package " + packageString + ";");
+            put("package " + packageName, "package " + packageString);
         }});
         System.out.println("Replaced " + i + " vars");
 
