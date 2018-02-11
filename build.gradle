@@ -42,6 +42,10 @@ dependencies {
     compile group: 'io.github.lukehutch', name: 'fast-classpath-scanner', version: '2.18.1'
 }
 
+javadoc {
+    options.stylesheetFile = new File(projectDir, "src/main/javadocs/javadoc_stylesheet.css")
+}
+
 jar {
     manifest {
         attributes(
