@@ -73,6 +73,9 @@ public class SkeletonGenerator {
 
         System.out.println("Filling out templates...");
         int i = 0;
+        i += replace(new File(folder, "scripts/deploy-build-results.sh"), new HashMap<String, String>() {{
+            put("Skeleton", projectName);
+        }});
         i += replace(new File(folder, "LICENSE"), new HashMap<String, String>() {{
             put("VoxelGamesLib", author);
         }});
