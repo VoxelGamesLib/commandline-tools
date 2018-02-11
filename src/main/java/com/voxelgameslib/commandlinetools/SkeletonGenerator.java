@@ -21,6 +21,8 @@ import java.util.Map;
 
 public class SkeletonGenerator {
 
+    public static final String classPrefix = "Skeleton";
+    public static final String packageName = "me.minidigger.voxelgameslib.skeleton";
     private String time = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
     public void generate(File projectFolder, String projectName, String groupId, String author, boolean useKotlin) {
@@ -35,6 +37,15 @@ public class SkeletonGenerator {
 
         System.out.println("Renaming folder");
         String packageString = groupId + "." + projectName.toLowerCase();
+        String classPrefix;
+        String packageName;
+        if (useKotlin) {
+            classPrefix = "SkeletonKT";
+            packageName = "me.minidigger.voxelgameslib.skeletonkt";
+        } else {
+            classPrefix = "Skeleton";
+            packageName = "me.minidigger.voxelgameslib.skeleton";
+        }
         File gitFolder = new File(folder, ".git");
         File packageFolder = new File(folder, "src/main/java/" + packageString.replace(".", "/"));
         File packageFolderParent = packageFolder.getParentFile();
@@ -60,7 +71,7 @@ public class SkeletonGenerator {
         System.out.println("Renaming files");
         String[] names = new String[]{"Feature.java", "Game.java", "Phase.java", "Plugin.java"};
         for (String name : names) {
-            File oldFile = new File(packageFolder, "Skeleton" + name);
+            File oldFile = new File(packageFolder, classPrefix + name);
             File newFile = new File(packageFolder, projectName + name);
             if (oldFile.renameTo(newFile)) {
                 System.out.println("renamed Skeleton" + name + " to " + projectName + name);
@@ -74,47 +85,47 @@ public class SkeletonGenerator {
         System.out.println("Filling out templates...");
         int i = 0;
         i += replace(new File(folder, "scripts/deploy-build-results.sh"), new HashMap<String, String>() {{
-            put("Skeleton", projectName);
+            put(classPrefix, projectName);
         }});
         i += replace(new File(folder, "LICENSE"), new HashMap<String, String>() {{
             put("VoxelGamesLib", author);
         }});
         i += replace(new File(folder, "README.md"), new HashMap<String, String>() {{
-            put("Skeleton", projectName);
+            put(classPrefix, projectName);
             put("For use with the VGL CLI tools", "Generated with VGL CLI on " + time + "\nTODO: Add a new readme");
         }});
         i += replace(new File(folder, "build.gradle"), new HashMap<String, String>() {{
-            put("me.minidigger.voxelgameslib.skeleton", groupId);
+            put(packageName, groupId);
             put("Skeleton-1.0-SNAPSHOT.jar", projectName + "-1.0-SNAPSHOT.jar");
         }});
         i += replace(new File(folder, "settings.gradle"), new HashMap<String, String>() {{
-            put("Skeleton", projectName);
+            put(classPrefix, projectName);
         }});
         i += replace(new File(folder, "src/main/resources/plugin.yml"), new HashMap<String, String>() {{
-            put("Skeleton", projectName);
+            put(classPrefix, projectName);
             put("MiniDigger", author);
-            put("me.minidigger.voxelgameslib.skeleton.SkeletonPlugin", groupId + "." + projectName.toLowerCase() + "." + projectName + "Plugin");
+            put(packageName + ".SkeletonPlugin", groupId + "." + projectName.toLowerCase() + "." + projectName + "Plugin");
         }});
         i += replace(new File(packageFolder, projectName + "Plugin.java"), new HashMap<String, String>() {{
-            put("Skeleton", projectName);
+            put(classPrefix, projectName);
             put("MiniDigger", author);
-            put("package me.minidigger.voxelgameslib.skeleton;", "package " + packageString + ";");
+            put("package " + packageName + ";", "package " + packageString + ";");
         }});
         i += replace(new File(packageFolder, projectName + "Phase.java"), new HashMap<String, String>() {{
             put("SkeletonPhase", projectName + "Phase");
             put("SkeletonFeature", projectName + "Feature");
             put("oneVsOneFeature", projectName.toLowerCase() + "Feature");
-            put("package me.minidigger.voxelgameslib.skeleton;", "package " + packageString + ";");
+            put("package " + packageName + ";", "package " + packageString + ";");
         }});
         i += replace(new File(packageFolder, projectName + "Game.java"), new HashMap<String, String>() {{
-            put("Skeleton", projectName);
+            put(classPrefix, projectName);
             put("MiniDigger", author);
-            put("package me.minidigger.voxelgameslib.skeleton;", "package " + packageString + ";");
+            put("package " + packageName + ";", "package " + packageString + ";");
         }});
         i += replace(new File(packageFolder, projectName + "Feature.java"), new HashMap<String, String>() {{
-            put("Skeleton", projectName);
+            put(classPrefix, projectName);
             put("MiniDigger", author);
-            put("package me.minidigger.voxelgameslib.skeleton;", "package " + packageString + ";");
+            put("package " + packageName + ";", "package " + packageString + ";");
         }});
         System.out.println("Replaced " + i + " vars");
 
@@ -131,8 +142,7 @@ public class SkeletonGenerator {
     private void clone(File outputFolder, boolean useKotlin) {
         String uri;
         if (useKotlin) {
-            uri = "";//TODO make a kotlin skeleton
-            throw new NotImplementedException("There is no kotlin skeleton yet :/ Your chance to contribute!");
+            uri = "https://github.com/VoxelGamesLib/skeletonkt.git";
         } else {
             uri = "https://github.com/VoxelGamesLib/skeleton.git";
         }
