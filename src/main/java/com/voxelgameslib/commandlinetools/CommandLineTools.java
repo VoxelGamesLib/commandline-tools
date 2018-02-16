@@ -28,7 +28,7 @@ public class CommandLineTools {
         options.addOption(Option.builder("projectFolder").desc("The folder the project should be located in").numberOfArgs(1).type(File.class).build());
         options.addOption(new Option("useKotlin", "If the gamemode should be written in kotlin"));
 
-        options.addOption(new Option("generateWorkspace", "Generates a workspace, ready to start working on VGL itself"));
+        options.addOption(new Option("generateWorkspace", "Generates a workspace, ready to enable working on VGL itself"));
         options.addOption(Option.builder("workspaceFolder").desc("The folder where the workspace should be located in (defaults to VoxelGamesLib)").numberOfArgs(1).type(File.class).build());
         options.addOption(new Option("includeAddons", "Also setup all default addons"));
         options.addOption(new Option("includeOtherProjects", "Also setup other misc projects"));

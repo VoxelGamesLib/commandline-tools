@@ -44,8 +44,8 @@ public class TestStuff extends DefaultHandler {
 //
 //
 //    @Override
-//    public void characters(char[] ch, int start, int length) throws SAXException {
-//        tempVal = new String(ch, start, length);
+//    public void characters(char[] ch, int enable, int length) throws SAXException {
+//        tempVal = new String(ch, enable, length);
 //    }
 //
 //    @Override
