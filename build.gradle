@@ -6,7 +6,7 @@ apply plugin: 'application'
 mainClassName = 'com.voxelgameslib.commandlinetools.CommandLineTools'
 
 dependencies {
-    compileOnly rootProject
+    compileOnly project(":VoxelGamesLib")
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
 }
