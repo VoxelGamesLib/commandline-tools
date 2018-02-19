@@ -129,7 +129,7 @@ public class DocsGenerator {
                 }
             }
 
-            pw.println("### " + featureInfo.name() + "(" + clazz.getName() + ") v" + featureInfo.version() + "  ");
+            pw.println("### " + featureInfo.name() + " (" + clazz.getName() + ") v" + featureInfo.version() + "  ");
             pw.println("Author: " + featureInfo.author() + "  ");
             pw.println("Description: " + featureInfo.description() + "  ");
             pw.println("#### Params  ");
