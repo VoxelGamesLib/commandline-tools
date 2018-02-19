@@ -6,7 +6,7 @@ apply plugin: 'application'
 mainClassName = 'com.voxelgameslib.commandlinetools.CommandLineTools'
 
 dependencies {
-    compileOnly project(":VoxelGamesLib")
+    compile project(":VoxelGamesLib")
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
 }
@@ -15,10 +15,17 @@ jar {
     manifest {
         attributes(
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-Class': mainClassName
+                'Main-Class': mainClassName,
+                'Implementation-Version': project.version + "@" + revision
         )
     }
 }
+
+shadowJar {
+    mergeServiceFiles()
+    configurations = [project.configurations.compile]
+}
+build.dependsOn shadowJar
 
 task createPom() {
     pom {
