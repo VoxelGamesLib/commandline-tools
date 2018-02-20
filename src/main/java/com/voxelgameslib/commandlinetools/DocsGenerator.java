@@ -44,6 +44,12 @@ public class DocsGenerator {
         collectFeatures();
         System.out.println("modify features.md...");
         modify(new File(outDir, "/docs/components/features.md"));
+        System.out.println("modify games.md...");
+        modify(new File(outDir, "/docs/components/games.md"));
+        System.out.println("modify phases.md...");
+        modify(new File(outDir, "/docs/components/phases.md"));
+        System.out.println("modify victoryconditions.md...");
+        modify(new File(outDir, "/docs/components/victoryconditions.md"));
         System.out.println("commit wiki...");
         commitWiki();
         System.out.println("MAKE SURE YOU PUSH THE CHANGES!");
@@ -87,7 +93,10 @@ public class DocsGenerator {
                     writePhases(pw);
                     break;
                 } else if (line.contains("[games]")) {
-                    writePhases(pw);
+                    writeGames(pw);
+                    break;
+                }else if (line.contains("[conditions]")) {
+                    writeConditions(pw);
                     break;
                 }
             }
@@ -102,10 +111,8 @@ public class DocsGenerator {
 
             List<String> dependencies = new ArrayList<>();
             try {
-                Class<?>[] dep = (Class[]) clazz.getMethod("getDependencies").invoke(clazz.newInstance());
-                for (Class<?> c : dep) {
-                    dependencies.add(c.getName());
-                }
+                //noinspection unchecked
+                dependencies = ((List<Class>) clazz.getMethod("getDependencies").invoke(clazz.newInstance())).stream().map(Class::getName).collect(Collectors.toList());
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("could not collect dependencies for clazz " + clazz.getSimpleName());
@@ -113,10 +120,8 @@ public class DocsGenerator {
 
             List<String> softDependencies = new ArrayList<>();
             try {
-                Class<?>[] dep = (Class[]) clazz.getMethod("getSoftDependencies").invoke(clazz.newInstance());
-                for (Class<?> c : dep) {
-                    softDependencies.add(c.getName());
-                }
+                //noinspection unchecked
+                softDependencies = ((List<Class>) clazz.getMethod("getSoftDependencies").invoke(clazz.newInstance())).stream().map(Class::getName).collect(Collectors.toList());
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("could not collect soft dependencies for clazz " + clazz.getSimpleName());
@@ -148,6 +153,10 @@ public class DocsGenerator {
 
     private void writeGames(PrintWriter pw) {
         pw.println("todo write games");
+    }
+
+    private void writeConditions(PrintWriter pw) {
+        pw.println("todo write conditions");
     }
 
     private void cloneWiki() {
