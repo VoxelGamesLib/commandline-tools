@@ -62,14 +62,14 @@ public class DocsGenerator {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        features = new FastClasspathScanner().scan().getNamesOfClassesWithAnnotation(FeatureInfo.class).parallelStream().map(name -> {
+        features = new FastClasspathScanner().scan().getNamesOfClassesWithAnnotation(FeatureInfo.class).parallelStream().sorted().map(name -> {
             try {
                 return Class.forName(name);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
             return null;
-        }).filter(Objects::nonNull).sorted().collect(Collectors.toList());
+        }).filter(Objects::nonNull).collect(Collectors.toList());
         System.out.println("Found " + features.size() + " features");
     }
 
