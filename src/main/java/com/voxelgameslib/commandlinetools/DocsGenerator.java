@@ -30,8 +30,8 @@ public class DocsGenerator {
 
     private Git git;
     private File outDir;
-    private Set<Class<?>> features = new HashSet<>();
-    private Set<Class<? extends Phase>> phases = new HashSet<>();
+    private List<Class<?>> features = new ArrayList<>();
+    private List<Class<? extends Phase>> phases = new ArrayList<>();
 
     public DocsGenerator(File outDir) {
         this.outDir = outDir;
@@ -69,7 +69,7 @@ public class DocsGenerator {
                 e.printStackTrace();
             }
             return null;
-        }).filter(Objects::nonNull).collect(Collectors.toSet());
+        }).filter(Objects::nonNull).sorted().collect(Collectors.toList());
         System.out.println("Found " + features.size() + " features");
     }
 
