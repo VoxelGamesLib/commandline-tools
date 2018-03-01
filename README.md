@@ -46,3 +46,11 @@ Example to generate a workspace with a testserver:
 ```
 java -jar commandline-tools.jar -generateWorkspace -workspaceFolder testWorkspace -includeAddons -includeOtherProjects -generateTestServer -serverFolder testWorkspace/testserver -downloadJar
 ```
+Example to generate a testserver
+```
+java -jar commandline-tools.jar -generateTestServer -serverFolder testserver -downloadJar
+```
+Example to generate a project
+```
+java -jar commandline-tools.jar -generateSkeletonGamemode -author yourName -projectFolder projectName -projectName projectName -groupId com.yourpackage [-useKotlin]
+```
