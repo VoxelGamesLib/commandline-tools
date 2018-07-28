@@ -22,8 +22,5 @@ rebel.xml
 /deploy-stuff
 .gradletasknamecache
 
-#nobody likes you mvn ;)
-pom.xml
-
 # these are generated and are unneccesarry
 package-info.java
