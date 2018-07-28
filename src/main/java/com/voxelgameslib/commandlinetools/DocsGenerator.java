@@ -13,10 +13,8 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.voxelgameslib.voxelgameslib.VoxelGamesLib;
@@ -95,7 +93,7 @@ public class DocsGenerator {
                 } else if (line.contains("[games]")) {
                     writeGames(pw);
                     break;
-                }else if (line.contains("[conditions]")) {
+                } else if (line.contains("[conditions]")) {
                     writeConditions(pw);
                     break;
                 }
