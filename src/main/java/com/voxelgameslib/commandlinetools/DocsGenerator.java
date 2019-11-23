@@ -18,11 +18,11 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.voxelgameslib.voxelgameslib.VoxelGamesLib;
-import com.voxelgameslib.voxelgameslib.feature.FeatureInfo;
-import com.voxelgameslib.voxelgameslib.feature.features.AutoRespawnFeature;
-import com.voxelgameslib.voxelgameslib.phase.Phase;
+import com.voxelgameslib.voxelgameslib.api.feature.FeatureInfo;
+import com.voxelgameslib.voxelgameslib.api.feature.features.AutoRespawnFeature;
+import com.voxelgameslib.voxelgameslib.api.phase.Phase;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.classgraph.ClassGraph;
 
 public class DocsGenerator {
 
@@ -60,9 +60,9 @@ public class DocsGenerator {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        features = new FastClasspathScanner().scan().getNamesOfClassesWithAnnotation(FeatureInfo.class).parallelStream().sorted().map(name -> {
+        features = new ClassGraph().scan().getClassesWithAnnotation(FeatureInfo.class.getName()).parallelStream().sorted().map(name -> {
             try {
-                return Class.forName(name);
+                return Class.forName(name.getName());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
